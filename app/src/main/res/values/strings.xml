@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Modules Connector</string>
+    <string name="title_home">Home</string>
+    <string name="title_modules">Modules</string>
+    <string name="title_settings">Settings</string>
+
+    <string name="title_activity_bluetooth_devices">Bluetooth Devices</string>
+    <string name="off">Off</string>
+</resources>
