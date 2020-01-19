@@ -4,14 +4,17 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.hexabitz.modulesconnector.Fragments.H01R00_RGB_LED;
+import com.hexabitz.modulesconnector.Fragments.Modules;
+import com.hexabitz.modulesconnector.Fragments.Settings;
 import com.hexabitz.modulesconnector.JAVA_COMS_LIB.Message;
 
 import java.io.IOException;
@@ -24,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
   private TextView mTextMessage;
 
   View parentLayout;
+  Fragment Modules = new Modules();
+  Fragment Settings = new Settings();
 
   private byte[] mmBuffer;
   private BluetoothSocket bluetoothSocket;
@@ -35,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
   public String Opt67_Response_Options = "01";
   public String Opt5_Reserved = "0";
   public String Opt34_Trace_Options = "00";
-  public String Opt2_16_BIT_Code = "1";
+  public String Opt2_16_BIT_Code = "0";
   public String Opt1_Extended_Flag = "0";
   public byte[] AllMessage;
 
@@ -44,11 +49,13 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+
     parentLayout = findViewById(android.R.id.content);
 
-//    BottomNavigationView navView = findViewById(R.id.nav_view);
+    BottomNavigationView navView = findViewById(R.id.nav_view);
     mTextMessage = findViewById(R.id.message);
-//    navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+    navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
 
     String DeviceName = getIntent().getStringExtra("DeviceName");
     String DeviceAddress = getIntent().getStringExtra("DeviceAddress");
@@ -57,53 +64,37 @@ public class MainActivity extends AppCompatActivity {
 
     connectToDevice(DeviceAddress);
 
-    ViewPager viewPager = findViewById(R.id.pager);
-    ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-    adapter.addFragment(new H01R00_RGB_LED(), "H01R00");
-
-    viewPager.setAdapter(adapter);
-
-    TabLayout tabLayout = findViewById(R.id.tabs);
-    tabLayout.setupWithViewPager(viewPager);
-
-//    LoadFragment(new H01R00_RGB_LED());
+    LoadFragment(Modules);
 
   }
 
-//  private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-//          = new BottomNavigationView.OnNavigationItemSelectedListener() {
+  private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+          = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
-//    @Override
-//    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//      Fragment fragment = new H01R00_RGB_LED();
-//      switch (item.getItemId())
-//      {
-//        case R.id.navigation_modules:
-//          fragment = new H01R00_RGB_LED();
-//          break;
-//
-//        case R.id.navigation_settings:
-//          fragment = new H01R00_RGB_LED();
-//          break;
-//
-//      }
-//      return LoadFragment(fragment);
-//    }
-//  };
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+      switch (item.getItemId())
+      {
+        case R.id.navigation_modules: return LoadFragment(Modules);
+        case R.id.navigation_settings: return LoadFragment(Settings);
+      }
+      return false;
+    }
+  };
 
-//  private boolean LoadFragment(Fragment fragment)
-//  {
-//    if (fragment != null)
-//    {
-//      getSupportFragmentManager()
-//          .beginTransaction()
-//          .replace(R.id.fragment_container, fragment)
-//          .commit();
-//      return true;
-//    }
-//    return false;
-//  }
+  private boolean LoadFragment(Fragment fragment)
+  {
+    if (fragment != null)
+    {
+      getSupportFragmentManager()
+          .beginTransaction()
+          .replace(R.id.fragment_container, fragment)
+          .commit();
+      return true;
+    }
+    return false;
+  }
 
   private void connectToDevice(String address) {
     UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb"); //Standard SerialPortService ID
@@ -166,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
                           Opt34_Trace_Options +
                           Opt2_16_BIT_Code +
                           Opt1_Extended_Flag;
-    byte Options = GetBytes(optionsString)[1];  // 00100010 // 0x22
+    byte Options = GetBytes(optionsString)[1];  // 00100000 // 0x20
 
     Message _Message = new Message(Destination, Source, Options, Code, Payload);
     AllMessage = _Message.GetAll();  // We get the whole buffer bytes to be sent to the Hexabitz modules.

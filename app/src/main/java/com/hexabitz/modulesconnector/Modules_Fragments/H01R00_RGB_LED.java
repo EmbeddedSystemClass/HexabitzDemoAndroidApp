@@ -1,7 +1,8 @@
-package com.hexabitz.modulesconnector.Fragments;
+package com.hexabitz.modulesconnector.Modules_Fragments;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.CompoundButton;
 import android.widget.NumberPicker;
 import android.widget.Switch;
 
+import com.hexabitz.modulesconnector.Fragments.Settings;
 import com.hexabitz.modulesconnector.JAVA_COMS_LIB.HexaInterface;
 import com.hexabitz.modulesconnector.MainActivity;
 import com.hexabitz.modulesconnector.R;
@@ -32,24 +34,27 @@ public class H01R00_RGB_LED extends Fragment {
   OpacityBar opacityBar;
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    rootView = inflater.inflate(R.layout.h01r00_rgb_led, container, false);
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    rootView = inflater.inflate(R.layout.frag_h01r00_rgb_led, container, false);
 
     picker = rootView.findViewById(R.id.picker);
     opacityBar = rootView.findViewById(R.id.opacitybar);
+
+
+    opacityBar.setOpacity(50);
     final Switch LedSwitch = rootView.findViewById(R.id.LedSwitch);
     final NumberPicker destinationNP = rootView.findViewById(R.id.destinationNP);
     final NumberPicker sourceNP = rootView.findViewById(R.id.sourceNP);
 
     String[] numbers = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
     destinationNP.setMinValue(0);
-    destinationNP.setMaxValue(numbers.length-1);
+    destinationNP.setMaxValue(numbers.length - 1);
     destinationNP.setDisplayedValues(numbers);
     destinationNP.setWrapSelectorWheel(true);
     destinationNP.setValue(1);
 
     sourceNP.setMinValue(0);
-    sourceNP.setMaxValue(numbers.length-1);
+    sourceNP.setMaxValue(numbers.length - 1);
     sourceNP.setDisplayedValues(numbers);
     sourceNP.setWrapSelectorWheel(true);
     sourceNP.setValue(0);
@@ -72,14 +77,14 @@ public class H01R00_RGB_LED extends Fragment {
         byte[] Payload = {1, (byte) red, (byte) green, (byte) blue, (byte) opacity};
 
         if (!isLocked) {
-          ((MainActivity) Objects.requireNonNull(getActivity())).SendMessage((byte) (destinationNP.getValue() + 1), (byte) (sourceNP.getValue() + 1), Code, Payload);
+          ((MainActivity) Objects.requireNonNull(getActivity())).SendMessage((byte) Settings.Destination, (byte) Settings.Source, Code, Payload);
           isLocked = true;
           t.schedule(new TimerTask() {
             @Override
             public void run() {
               isLocked = false;
             }
-          }, 200);
+          }, 500);
         }
       }
     });
@@ -97,14 +102,14 @@ public class H01R00_RGB_LED extends Fragment {
         byte[] Payload = {1, (byte) red, (byte) green, (byte) blue, (byte) opacity};
 
         if (!isLocked) {
-          ((MainActivity) Objects.requireNonNull(getActivity())).SendMessage((byte) (destinationNP.getValue() + 1), (byte) (sourceNP.getValue() + 1), Code, Payload);
+          ((MainActivity) Objects.requireNonNull(getActivity())).SendMessage((byte) Settings.Destination, (byte) Settings.Source, Code, Payload);
           isLocked = true;
           t.schedule(new TimerTask() {
             @Override
             public void run() {
               isLocked = false;
             }
-          }, 200);
+          }, 500);
         }
       }
     });
@@ -121,18 +126,20 @@ public class H01R00_RGB_LED extends Fragment {
           int blue = Color.blue(color);
           int opacity = opacityBar.getOpacity();
 
-          byte[] Payload = {1, (byte) red, (byte) green, (byte) blue, (byte) opacity};
-          Code = HexaInterface.Message_Codes.CODE_H01R0_COLOR;
+//          byte[] Payload = {1, (byte) red, (byte) green, (byte) blue, (byte) opacity};
+//          Code = HexaInterface.Message_Codes.CODE_H01R0_COLOR;
+          byte[] Payload = {90};
+          Code = HexaInterface.Message_Codes.CODE_H01R0_ON;
 
           if (!isLocked) {
-            ((MainActivity) Objects.requireNonNull(getActivity())).SendMessage((byte) (destinationNP.getValue() + 1), (byte) (sourceNP.getValue() + 1), Code, Payload);
+            ((MainActivity) Objects.requireNonNull(getActivity())).SendMessage((byte) Settings.Destination, (byte) Settings.Source, Code, Payload);
             isLocked = true;
             t.schedule(new TimerTask() {
               @Override
               public void run() {
                 isLocked = false;
               }
-            }, 200);
+            }, 500);
           }
 
         }
@@ -143,14 +150,14 @@ public class H01R00_RGB_LED extends Fragment {
           Code = HexaInterface.Message_Codes.CODE_H01R0_OFF;
           byte[] Payload = new byte[0];
           if (!isLocked) {
-            ((MainActivity) Objects.requireNonNull(getActivity())).SendMessage((byte) (destinationNP.getValue() + 1), (byte) (sourceNP.getValue() + 1), Code, Payload);
+            ((MainActivity) Objects.requireNonNull(getActivity())).SendMessage((byte) Settings.Destination, (byte) Settings.Source, Code, Payload);
             isLocked = true;
             t.schedule(new TimerTask() {
               @Override
               public void run() {
                 isLocked = false;
               }
-            }, 200);
+            }, 500);
           }
         }
       }
@@ -161,6 +168,12 @@ public class H01R00_RGB_LED extends Fragment {
 
 
     return rootView;
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+
   }
 
 }
