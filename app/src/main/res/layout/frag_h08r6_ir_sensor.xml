@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.hexabitz.modulesconnector.Modules_Fragments.H0FR60_RELAY_AC">
+    tools:context="com.hexabitz.modulesconnector.Modules_Fragments.H08R6_IR_SENSOR">
 
 
     <android.support.constraint.ConstraintLayout
@@ -18,7 +18,7 @@
             android:layout_height="131dp"
             android:layout_marginTop="16dp"
             android:contentDescription="Module Pic"
-            android:src="@drawable/module_h09r00_relay"
+            android:src="@drawable/module_h08r6_ir_sensor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.057"
             app:layout_constraintStart_toStartOf="parent"
@@ -30,9 +30,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="28dp"
             android:layout_marginTop="28dp"
-            android:text="H0FR60"
+            android:text="H08R6"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/image"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -42,35 +43,23 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="28dp"
             android:layout_marginTop="80dp"
-            android:text="AC Relay"
+            android:text="IR Sensor"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/image"
             app:layout_constraintTop_toTopOf="parent" />
 
-
-        <Switch
-            android:id="@+id/RelaySwitch"
-            android:layout_width="wrap_content"
+        <Spinner
+            android:id="@+id/unitSpinner"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:text="@string/off"
-            android:textColor="@color/colorPrimary"
-            android:textSize="24sp"
+            android:layout_marginTop="120dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.495"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/image" />
 
-        <EditText
-            android:id="@+id/TimeOutTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="number"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/RelaySwitch" />
 
     </android.support.constraint.ConstraintLayout>
 

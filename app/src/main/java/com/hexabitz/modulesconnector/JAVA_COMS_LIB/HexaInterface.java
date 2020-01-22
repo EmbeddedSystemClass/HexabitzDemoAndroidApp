@@ -1,5 +1,16 @@
 package com.hexabitz.modulesconnector.JAVA_COMS_LIB;
 
+import android.support.design.widget.Snackbar;
+import android.widget.TextView;
+
+import com.hexabitz.modulesconnector.Fragments.Settings;
+import com.hexabitz.modulesconnector.MainActivity;
+import com.hexabitz.modulesconnector.R;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.Objects;
+
 public class HexaInterface {
 
 
@@ -7,8 +18,26 @@ public class HexaInterface {
   public String Opt67_Response_Options = "01";
   public String Opt5_Reserved = "0";
   public String Opt34_Trace_Options = "00";
-  public String Opt2_16_BIT_Code = "1";
+  public String Opt2_16_BIT_Code = "0";
   public String Opt1_Extended_Flag = "0";
+  public byte[] AllMessage;
+
+
+
+  // Method to send the buffer to Hexabitz modules.
+  public void SendMessage(byte Destination, byte Source, int Code, byte[] Payload) {
+    String optionsString = Opt8_Next_Message +
+        Opt67_Response_Options +
+        Opt5_Reserved +
+        Opt34_Trace_Options +
+        Opt2_16_BIT_Code +
+        Opt1_Extended_Flag;
+    byte Options = GetBytes(optionsString)[1];  // 00100000 // 0x20
+
+    Message _Message = new Message(Destination, Source, Options, Code, Payload);
+    AllMessage = _Message.GetAll();  // We get the whole buffer bytes to be sent to the Hexabitz modules.
+  }
+
 
 
   // Enum for the codes to be sent to the modules
@@ -22,6 +51,20 @@ public class HexaInterface {
     public static final int CODE_H01R0_PULSE	           = 104;
     public static final int CODE_H01R0_SWEEP		         = 105;
     public static final int CODE_H01R0_DIM			         = 106;
+
+    // H08R6x (IR Sensor)
+    public static final int CODE_H08R6_GET_INFO          = 400;
+    public static final int CODE_H08R6_SAMPLE            = 401;
+    public static final int CODE_H08R6_STREAM_PORT       = 402;
+    public static final int CODE_H08R6_STREAM_MEM        = 403;
+    public static final int CODE_H08R6_RESULT_MEASUREMENT= 404;
+    public static final int CODE_H08R6_STOP_RANGING      = 405;
+    public static final int CODE_H08R6_SET_UNIT          = 406;
+    public static final int CODE_H08R6_GET_UNIT          = 407;
+    public static final int CODE_H08R6_RESPOND_GET_UNIT  = 408;
+    public static final int CODE_H08R6_MAX_RANGE         = 409;
+    public static final int CODE_H08R6_MIN_RANGE         = 410;
+    public static final int CODE_H08R6_TIMEOUT           = 411;
 
     // H0FR6x (Relay)
     public static final int CODE_H0FR6_ON		             = 750;
@@ -86,6 +129,17 @@ public class HexaInterface {
     public static final int TRUE = 1;
   }
   // endregion
+
+  //get byte from string
+  public static byte[] GetBytes(String bitString)
+  {
+    short a = Short.parseShort(bitString, 2);
+    ByteBuffer bytes = ByteBuffer.allocate(2).putShort(a);
+
+    byte[] byteArray = bytes.array();
+
+    return byteArray;
+  }
 
 
 }

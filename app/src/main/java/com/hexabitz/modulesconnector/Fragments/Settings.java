@@ -17,14 +17,17 @@ public class Settings extends Fragment {
 
   View rootView;
 
+  NumberPicker destinationNP;
+  NumberPicker sourceNP;
+
 
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     rootView = inflater.inflate(R.layout.frag_settings, container, false);
 
 
-    final NumberPicker destinationNP = rootView.findViewById(R.id.destinationNP);
-    final NumberPicker sourceNP = rootView.findViewById(R.id.sourceNP);
+    destinationNP = rootView.findViewById(R.id.destinationNP);
+    sourceNP = rootView.findViewById(R.id.sourceNP);
 
     String[] numbers = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
     destinationNP.setMinValue(0);
@@ -34,11 +37,10 @@ public class Settings extends Fragment {
     destinationNP.setValue(1);
 
     sourceNP.setMinValue(0);
-    sourceNP.setMaxValue(numbers.length-1);
+    sourceNP.setMaxValue(numbers.length - 1);
     sourceNP.setDisplayedValues(numbers);
     sourceNP.setWrapSelectorWheel(true);
     sourceNP.setValue(0);
-
 
     destinationNP.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
       @Override
@@ -56,12 +58,6 @@ public class Settings extends Fragment {
     });
 
     return rootView;
-  }
-
-  @Override
-  public void onResume() {
-    super.onResume();
-
   }
 
 }

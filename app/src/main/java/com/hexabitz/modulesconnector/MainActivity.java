@@ -49,13 +49,18 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-
     parentLayout = findViewById(android.R.id.content);
+
+    if (savedInstanceState != null) {
+      //Restore the fragment's instance
+      Modules = getSupportFragmentManager().getFragment(savedInstanceState, "Modules");
+      Settings = getSupportFragmentManager().getFragment(savedInstanceState, "Settings");
+    }
+
 
     BottomNavigationView navView = findViewById(R.id.nav_view);
     mTextMessage = findViewById(R.id.message);
     navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
 
     String DeviceName = getIntent().getStringExtra("DeviceName");
     String DeviceAddress = getIntent().getStringExtra("DeviceAddress");
@@ -64,9 +69,17 @@ public class MainActivity extends AppCompatActivity {
 
     connectToDevice(DeviceAddress);
 
-
     LoadFragment(Modules);
 
+  }
+
+  @Override
+  protected void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+
+    //Save the fragment's instance
+    getSupportFragmentManager().putFragment(outState, "Modules", Modules);
+    getSupportFragmentManager().putFragment(outState, "Settings", Settings);
   }
 
   private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -166,6 +179,7 @@ public class MainActivity extends AppCompatActivity {
 
     String crc = String.format("%02X ", AllMessage[AllMessage.length -1]);
     crcLBL.setText(crc);
+
 
     try
     {

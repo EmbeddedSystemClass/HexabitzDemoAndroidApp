@@ -27,6 +27,7 @@ public class H01R00_RGB_LED extends Fragment {
 
   boolean isLocked = false, isOn = false;
   int Code;
+  byte[] Payload;
   Timer t = new Timer();
 
   View rootView;
@@ -39,14 +40,15 @@ public class H01R00_RGB_LED extends Fragment {
 
     picker = rootView.findViewById(R.id.picker);
     opacityBar = rootView.findViewById(R.id.opacitybar);
-
-
     opacityBar.setOpacity(50);
+
+
     final Switch LedSwitch = rootView.findViewById(R.id.LedSwitch);
     final NumberPicker destinationNP = rootView.findViewById(R.id.destinationNP);
     final NumberPicker sourceNP = rootView.findViewById(R.id.sourceNP);
 
     String[] numbers = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
+
     destinationNP.setMinValue(0);
     destinationNP.setMaxValue(numbers.length - 1);
     destinationNP.setDisplayedValues(numbers);
@@ -59,33 +61,16 @@ public class H01R00_RGB_LED extends Fragment {
     sourceNP.setWrapSelectorWheel(true);
     sourceNP.setValue(0);
 
-
-
     picker.addOpacityBar(opacityBar);
-    picker.getColor();
     picker.setOldCenterColor(picker.getColor());
     picker.setShowOldCenterColor(false);
     picker.setOnColorChangedListener(new ColorPicker.OnColorChangedListener() {
       @Override
       public void onColorChanged(int color) {
-        int red = Color.red(color);
-        int green = Color.green(color);
-        int blue = Color.blue(color);
         int opacity = opacityBar.getOpacity();
-
         Code = HexaInterface.Message_Codes.CODE_H01R0_COLOR;
-        byte[] Payload = {1, (byte) red, (byte) green, (byte) blue, (byte) opacity};
-
-        if (!isLocked) {
-          ((MainActivity) Objects.requireNonNull(getActivity())).SendMessage((byte) Settings.Destination, (byte) Settings.Source, Code, Payload);
-          isLocked = true;
-          t.schedule(new TimerTask() {
-            @Override
-            public void run() {
-              isLocked = false;
-            }
-          }, 500);
-        }
+        Payload = new byte[]{1, (byte) Color.red(color), (byte) Color.green(color), (byte) Color.blue(color), (byte) opacity};
+        SendMessage();
       }
     });
 
@@ -93,24 +78,10 @@ public class H01R00_RGB_LED extends Fragment {
       @Override
       public void onOpacityChanged(int opacity) {
         int color = picker.getColor();
-        int red = Color.red(color);
-        int green = Color.green(color);
-        int blue = Color.blue(color);
         opacity = opacity * 100 / 255;
-
         Code = HexaInterface.Message_Codes.CODE_H01R0_COLOR;
-        byte[] Payload = {1, (byte) red, (byte) green, (byte) blue, (byte) opacity};
-
-        if (!isLocked) {
-          ((MainActivity) Objects.requireNonNull(getActivity())).SendMessage((byte) Settings.Destination, (byte) Settings.Source, Code, Payload);
-          isLocked = true;
-          t.schedule(new TimerTask() {
-            @Override
-            public void run() {
-              isLocked = false;
-            }
-          }, 500);
-        }
+        Payload = new byte[]{1, (byte) Color.red(color), (byte) Color.green(color), (byte) Color.blue(color), (byte) opacity};
+        SendMessage();
       }
     });
 
@@ -120,60 +91,35 @@ public class H01R00_RGB_LED extends Fragment {
         if (!isOn) {
           LedSwitch.setText("On");
           isOn = true;
-          int color = picker.getColor();
-          int red = Color.red(color);
-          int green = Color.green(color);
-          int blue = Color.blue(color);
-          int opacity = opacityBar.getOpacity();
-
-//          byte[] Payload = {1, (byte) red, (byte) green, (byte) blue, (byte) opacity};
-//          Code = HexaInterface.Message_Codes.CODE_H01R0_COLOR;
-          byte[] Payload = {90};
           Code = HexaInterface.Message_Codes.CODE_H01R0_ON;
-
-          if (!isLocked) {
-            ((MainActivity) Objects.requireNonNull(getActivity())).SendMessage((byte) Settings.Destination, (byte) Settings.Source, Code, Payload);
-            isLocked = true;
-            t.schedule(new TimerTask() {
-              @Override
-              public void run() {
-                isLocked = false;
-              }
-            }, 500);
-          }
-
+          Payload = new byte[]{90};
+          SendMessage();
         }
         else
         {
           LedSwitch.setText("Off");
           isOn = false;
           Code = HexaInterface.Message_Codes.CODE_H01R0_OFF;
-          byte[] Payload = new byte[0];
-          if (!isLocked) {
-            ((MainActivity) Objects.requireNonNull(getActivity())).SendMessage((byte) Settings.Destination, (byte) Settings.Source, Code, Payload);
-            isLocked = true;
-            t.schedule(new TimerTask() {
-              @Override
-              public void run() {
-                isLocked = false;
-              }
-            }, 500);
-          }
+          Payload = new byte[0];
+          SendMessage();
         }
       }
     });
 
-
-
-
-
     return rootView;
   }
 
-  @Override
-  public void onResume() {
-    super.onResume();
-
+  private void SendMessage() {
+    if (!isLocked) {
+      ((MainActivity) Objects.requireNonNull(getActivity())).SendMessage((byte) Settings.Destination, (byte) Settings.Source, Code, Payload);
+      isLocked = true;
+      t.schedule(new TimerTask() {
+        @Override
+        public void run() {
+          isLocked = false;
+        }
+      }, 100);
+    }
   }
 
 }
