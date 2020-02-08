@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.NumberPicker;
 import android.widget.Switch;
 
 import com.hexabitz.modulesconnector.Fragments.Settings;
@@ -42,24 +41,7 @@ public class H01R00_RGB_LED extends Fragment {
     opacityBar = rootView.findViewById(R.id.opacitybar);
     opacityBar.setOpacity(50);
 
-
     final Switch LedSwitch = rootView.findViewById(R.id.LedSwitch);
-    final NumberPicker destinationNP = rootView.findViewById(R.id.destinationNP);
-    final NumberPicker sourceNP = rootView.findViewById(R.id.sourceNP);
-
-    String[] numbers = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
-
-    destinationNP.setMinValue(0);
-    destinationNP.setMaxValue(numbers.length - 1);
-    destinationNP.setDisplayedValues(numbers);
-    destinationNP.setWrapSelectorWheel(true);
-    destinationNP.setValue(1);
-
-    sourceNP.setMinValue(0);
-    sourceNP.setMaxValue(numbers.length - 1);
-    sourceNP.setDisplayedValues(numbers);
-    sourceNP.setWrapSelectorWheel(true);
-    sourceNP.setValue(0);
 
     picker.addOpacityBar(opacityBar);
     picker.setOldCenterColor(picker.getColor());

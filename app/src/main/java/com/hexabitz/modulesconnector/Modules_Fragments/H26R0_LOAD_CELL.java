@@ -26,7 +26,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-public class H08R6_IR_SENSOR extends Fragment {
+public class H26R0_LOAD_CELL extends Fragment {
 
   boolean isLocked = false, isOn = false;
   int Code;
@@ -39,13 +39,14 @@ public class H08R6_IR_SENSOR extends Fragment {
 
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-    rootView = inflater.inflate(R.layout.frag_h08r6_ir_sensor, container, false);
+    rootView = inflater.inflate(R.layout.frag_h26r0_load_cell, container, false);
 
     unitSpinner = rootView.findViewById(R.id.unitSpinner);
     List<String> spinnerArray = new ArrayList<>();
-    spinnerArray.add("MM");
-    spinnerArray.add("CM");
-    spinnerArray.add("Inch");
+    spinnerArray.add("Gram");
+    spinnerArray.add("KGram");
+    spinnerArray.add("Pound");
+    spinnerArray.add("Ounces");
 
     ArrayAdapter<String> adapter = new ArrayAdapter<>(
         getActivity(), android.R.layout.simple_spinner_item, spinnerArray);
@@ -69,16 +70,17 @@ public class H08R6_IR_SENSOR extends Fragment {
 
     final TextView PeriodTV = rootView.findViewById(R.id.PeriodTV);
     final TextView TimeOutTV = rootView.findViewById(R.id.TimeOutTV);
-    final Switch IRSwitch = rootView.findViewById(R.id.IRSwitch);
+    final Switch LoadCellSwitch = rootView.findViewById(R.id.LoadCellSwitch);
 
 
-    IRSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+
+    LoadCellSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
       @Override
       public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-        if (!isOn) {
-          IRSwitch.setText("On");
-          isOn = true;
+        if (!isChecked) {
+          LoadCellSwitch.setText("On");
 
           int period = Integer.parseInt(PeriodTV.getText().toString());
           int time = Integer.parseInt(TimeOutTV.getText().toString());
@@ -86,23 +88,31 @@ public class H08R6_IR_SENSOR extends Fragment {
           byte[] periodBytes = ByteBuffer.allocate(4).putInt(period).array();
           byte[] timeBytes = ByteBuffer.allocate(4).putInt(time).array();
 
-          Code = HexaInterface.Message_Codes.CODE_H08R6_STREAM_PORT;
-          Payload = new byte[]{periodBytes[3], periodBytes[2], periodBytes[1], periodBytes[0],
-                              timeBytes[3], timeBytes[2], timeBytes[1], timeBytes[0]};
-          SendMessage();
+          Code = HexaInterface.Message_Codes.CODE_H26R0_STREAM_PORT_GRAM;
+          Payload = new byte[]{
+              1,
+              periodBytes[3],
+              periodBytes[2],
+              periodBytes[1],
+              periodBytes[0],
 
-//          try {
-//            ((MainActivity) Objects.requireNonNull(getActivity())).receiveData();
-//          } catch (IOException e) {
-//            e.printStackTrace();
-//          }
+              timeBytes[3],
+              timeBytes[2],
+              timeBytes[1],
+              timeBytes[0],
+
+              4,
+              1};
+          SendMessage();
+          MainActivity.ReceiveDataTask ReceiveDataTask = new MainActivity.ReceiveDataTask();
+          ReceiveDataTask.execute();
 
         }
         else
         {
-          IRSwitch.setText("Off");
+          LoadCellSwitch.setText("Off");
           isOn = false;
-          Code = HexaInterface.Message_Codes.CODE_H08R6_STOP_RANGING;
+          Code = HexaInterface.Message_Codes.CODE_H26R0_STOP;
           Payload = new byte[0];
           SendMessage();
         }

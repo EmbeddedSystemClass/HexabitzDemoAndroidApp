@@ -53,14 +53,16 @@ public class H0FR60_RELAY_AC extends Fragment {
 
           Code = HexaInterface.Message_Codes.CODE_H0FR6_ON;
           Payload = new byte[]{timeBytes[3], timeBytes[2], timeBytes[1], timeBytes[0]};
+//          Payload = new byte[0];
           SendMessage();
+
 
         }
         else
         {
           RelaySwitch.setText("Off");
           isOn = false;
-          Code = HexaInterface.Message_Codes.CODE_H01R0_OFF;
+          Code = HexaInterface.Message_Codes.CODE_H0FR6_TOGGLE;
           Payload = new byte[0];
           SendMessage();
         }

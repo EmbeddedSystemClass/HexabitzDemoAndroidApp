@@ -43,6 +43,11 @@ public class HexaInterface {
   // Enum for the codes to be sent to the modules
   public class Message_Codes
   {
+
+    // Bos Messages
+    public static final int CODE_PING			               = 1;
+    public static final int CODE_IND_ON			             = 3;
+
     // H01R0 (Led Module)
     public static final int CODE_H01R0_ON			           = 100;
     public static final int CODE_H01R0_OFF			         = 101;

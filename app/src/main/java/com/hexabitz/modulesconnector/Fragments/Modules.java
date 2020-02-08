@@ -9,9 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hexabitz.modulesconnector.Modules_Fragments.H01R00_RGB_LED;
-import com.hexabitz.modulesconnector.Modules_Fragments.H08R6_IR_SENSOR;
-import com.hexabitz.modulesconnector.Modules_Fragments.H0FR60_RELAY_AC;
+import com.hexabitz.modulesconnector.Modules_Fragments.*;
 import com.hexabitz.modulesconnector.R;
 import com.hexabitz.modulesconnector.ViewPagerAdapter;
 
@@ -20,9 +18,12 @@ public class Modules extends Fragment {
 
   View rootView;
 
+  Fragment Settings = new Settings();
   Fragment H01R00_RGB_LED = new H01R00_RGB_LED();
   Fragment H0FR60_RELAY = new H0FR60_RELAY_AC();
   Fragment H08R6_IR_SENSOR = new H08R6_IR_SENSOR();
+  Fragment H26R0_LOAD_CELL = new H26R0_LOAD_CELL();
+//  Fragment HXXXX_NAME_TEMPLATE = new HXXXX_NAME_TEMPLATE();
 
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -31,8 +32,10 @@ public class Modules extends Fragment {
     ViewPager viewPager = rootView.findViewById(R.id.pager);
     ViewPagerAdapter adapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
 
+    adapter.addFragment(Settings, "Settings");
     adapter.addFragment(H01R00_RGB_LED, "H01R00");
     adapter.addFragment(H0FR60_RELAY, "H0FR60");
+    adapter.addFragment(H26R0_LOAD_CELL, "H26R0");
     adapter.addFragment(H08R6_IR_SENSOR, "H08R6");
 
     viewPager.setAdapter(adapter);

@@ -3,18 +3,19 @@ package com.hexabitz.modulesconnector;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.hexabitz.modulesconnector.Fragments.Modules;
-import com.hexabitz.modulesconnector.Fragments.Settings;
 import com.hexabitz.modulesconnector.JAVA_COMS_LIB.Message;
 
 import java.io.IOException;
@@ -26,14 +27,15 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity {
   private TextView mTextMessage;
 
-  View parentLayout;
+  static View parentLayout;
   Fragment Modules = new Modules();
-  Fragment Settings = new Settings();
+//  Fragment Settings = new Settings();
+static TextView testLBL;
 
   private byte[] mmBuffer;
   private BluetoothSocket bluetoothSocket;
   private BluetoothDevice bluetoothDevice;
-  private InputStream inputStream;
+  private static InputStream inputStream;
   private OutputStream outputStream;
 
   public String Opt8_Next_Message = "0";
@@ -48,13 +50,14 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+    testLBL = findViewById(R.id.testLBL);
 
     parentLayout = findViewById(android.R.id.content);
 
     if (savedInstanceState != null) {
       //Restore the fragment's instance
       Modules = getSupportFragmentManager().getFragment(savedInstanceState, "Modules");
-      Settings = getSupportFragmentManager().getFragment(savedInstanceState, "Settings");
+//      Settings = getSupportFragmentManager().getFragment(savedInstanceState, "Settings");
     }
 
 
@@ -79,27 +82,25 @@ public class MainActivity extends AppCompatActivity {
 
     //Save the fragment's instance
     getSupportFragmentManager().putFragment(outState, "Modules", Modules);
-    getSupportFragmentManager().putFragment(outState, "Settings", Settings);
+//    getSupportFragmentManager().putFragment(outState, "Settings", Settings);
   }
 
   private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-          = new BottomNavigationView.OnNavigationItemSelectedListener() {
+      = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-      switch (item.getItemId())
-      {
-        case R.id.navigation_modules: return LoadFragment(Modules);
-        case R.id.navigation_settings: return LoadFragment(Settings);
+      switch (item.getItemId()) {
+        case R.id.navigation_modules:
+          return LoadFragment(Modules);
+//        case R.id.navigation_settings: return LoadFragment(Settings);
       }
       return false;
     }
   };
 
-  private boolean LoadFragment(Fragment fragment)
-  {
-    if (fragment != null)
-    {
+  private boolean LoadFragment(Fragment fragment) {
+    if (fragment != null) {
       getSupportFragmentManager()
           .beginTransaction()
           .replace(R.id.fragment_container, fragment)
@@ -114,14 +115,11 @@ public class MainActivity extends AppCompatActivity {
     BluetoothSocket tmp;
     BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
-    try
-    {
+    try {
       tmp = device.createRfcommSocketToServiceRecord(MY_UUID);
-    }
-    catch (IOException e)
-    {
-          Snackbar.make(parentLayout, e.getMessage(), Snackbar.LENGTH_LONG)
-                  .setAction("IOException", null).show();
+    } catch (IOException e) {
+      Snackbar.make(parentLayout, e.getMessage(), Snackbar.LENGTH_LONG)
+          .setAction("IOException", null).show();
       return;
     }
     bluetoothDevice = device;
@@ -129,33 +127,24 @@ public class MainActivity extends AppCompatActivity {
 
     mBluetoothAdapter.cancelDiscovery();
 
-    try
-    {
+    try {
       bluetoothSocket.connect();
-    }
-    catch (IOException connectException)
-    {
+    } catch (IOException connectException) {
       Snackbar.make(parentLayout, connectException.getMessage(), Snackbar.LENGTH_LONG)
-              .setAction("IOException", null).show();
-      try
-      {
+          .setAction("IOException", null).show();
+      try {
         bluetoothSocket.close();
-      }
-      catch (IOException closeException)
-      {
+      } catch (IOException closeException) {
         Snackbar.make(parentLayout, closeException.getMessage(), Snackbar.LENGTH_LONG)
             .setAction("IOException", null).show();
       }
       return;
     }
 
-    try
-    {
+    try {
       outputStream = bluetoothSocket.getOutputStream();
       inputStream = bluetoothSocket.getInputStream();
-    }
-    catch (IOException e)
-    {
+    } catch (IOException e) {
       Snackbar.make(parentLayout, e.getMessage(), Snackbar.LENGTH_LONG)
           .setAction("IOException", null).show();
 
@@ -164,29 +153,25 @@ public class MainActivity extends AppCompatActivity {
 
   // Method to send the buffer to Hexabitz modules.
   public void SendMessage(byte Destination, byte Source, int Code, byte[] Payload) {
+    if (Code > 255)
+      Opt2_16_BIT_Code = "1";
+    else
+      Opt2_16_BIT_Code = "0";
     String optionsString = Opt8_Next_Message +
-                          Opt67_Response_Options +
-                          Opt5_Reserved +
-                          Opt34_Trace_Options +
-                          Opt2_16_BIT_Code +
-                          Opt1_Extended_Flag;
+        Opt67_Response_Options +
+        Opt5_Reserved +
+        Opt34_Trace_Options +
+        Opt2_16_BIT_Code +
+        Opt1_Extended_Flag;
     byte Options = GetBytes(optionsString)[1];  // 00100000 // 0x20
 
     Message _Message = new Message(Destination, Source, Options, Code, Payload);
     AllMessage = _Message.GetAll();  // We get the whole buffer bytes to be sent to the Hexabitz modules.
 
-    TextView crcLBL = findViewById(R.id.crcLBL);
 
-    String crc = String.format("%02X ", AllMessage[AllMessage.length -1]);
-    crcLBL.setText(crc);
-
-
-    try
-    {
-      outputStream.write(AllMessage,0, AllMessage.length);
-    }
-    catch (IOException e)
-    {
+    try {
+      outputStream.write(AllMessage, 0, AllMessage.length);
+    } catch (IOException e) {
       Snackbar.make(parentLayout, e.getMessage(), Snackbar.LENGTH_LONG)
           .setAction("IOException", null).show();
     }
@@ -194,14 +179,48 @@ public class MainActivity extends AppCompatActivity {
   }
 
   //get byte from string
-  public static byte[] GetBytes(String bitString)
-  {
+  public static byte[] GetBytes(String bitString) {
     short a = Short.parseShort(bitString, 2);
     ByteBuffer bytes = ByteBuffer.allocate(2).putShort(a);
 
-    byte[] byteArray = bytes.array();
-
-    return byteArray;
+    return bytes.array();
   }
 
+  public static class ReceiveDataTask extends AsyncTask<String, String, String> {
+
+    @Override
+    protected void onPreExecute() {
+
+    }
+
+    @Override
+    protected void onPostExecute(String r) {
+
+    }
+
+    @Override
+    protected String doInBackground(String... strings) {
+      InputStream socketInputStream = inputStream;
+      byte[] buffer = new byte[256];
+      int bytes;
+
+
+      // Keep looping to listen for received messages
+      while (true) {
+        try {
+          bytes = socketInputStream.read(buffer);            //read bytes from input buffer
+          String readMessage = new String(buffer, 0, bytes);
+          testLBL.setText(readMessage);
+          // Send the obtained bytes to the UI Activity via handler
+          Log.i("logging", readMessage + "");
+        } catch (IOException e) {
+          Snackbar.make(parentLayout, e.getMessage(), Snackbar.LENGTH_LONG)
+              .setAction("IOException", null).show();
+
+          break;
+        }
+      }
+      return null;
+    }
+  }
 }

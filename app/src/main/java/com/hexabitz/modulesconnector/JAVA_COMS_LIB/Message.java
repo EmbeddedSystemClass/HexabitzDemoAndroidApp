@@ -31,7 +31,7 @@ public class Message {
     this.Destination = Destination;
     this.Source = Source;
     this.Options = Options;
-    LSC = (byte)(Code & 0xFF); // Get the MSC & LSC automaticly from the code.
+    LSC = (byte)(Code & 0xFF); // Get the MSC & LSC automatically from the code.
     MSC = (byte)(Code >> 8);
     this.Payload = Payload;
 

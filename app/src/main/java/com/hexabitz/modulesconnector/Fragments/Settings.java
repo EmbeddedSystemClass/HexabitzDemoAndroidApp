@@ -13,7 +13,7 @@ import com.hexabitz.modulesconnector.R;
 
 public class Settings extends Fragment {
 
-  public static int Destination = 2, Source = 1;
+  public static int Destination = 6, Source = 1;
 
   View rootView;
 
@@ -34,7 +34,7 @@ public class Settings extends Fragment {
     destinationNP.setMaxValue(numbers.length-1);
     destinationNP.setDisplayedValues(numbers);
     destinationNP.setWrapSelectorWheel(true);
-    destinationNP.setValue(1);
+    destinationNP.setValue(5);
 
     sourceNP.setMinValue(0);
     sourceNP.setMaxValue(numbers.length - 1);
