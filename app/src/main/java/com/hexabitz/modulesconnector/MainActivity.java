@@ -10,7 +10,6 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -22,17 +21,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.text.DecimalFormat;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
-  private TextView mTextMessage;
 
   static View parentLayout;
   Fragment Modules = new Modules();
-//  Fragment Settings = new Settings();
-static TextView testLBL;
+  //  Fragment Settings = new Settings();
 
-  private byte[] mmBuffer;
   private BluetoothSocket bluetoothSocket;
   private BluetoothDevice bluetoothDevice;
   private static InputStream inputStream;
@@ -50,7 +47,6 @@ static TextView testLBL;
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-    testLBL = findViewById(R.id.testLBL);
 
     parentLayout = findViewById(android.R.id.content);
 
@@ -62,7 +58,6 @@ static TextView testLBL;
 
 
     BottomNavigationView navView = findViewById(R.id.nav_view);
-    mTextMessage = findViewById(R.id.message);
     navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
     String DeviceName = getIntent().getStringExtra("DeviceName");
@@ -186,7 +181,29 @@ static TextView testLBL;
     return bytes.array();
   }
 
+
+  public static String bytesToHex(byte[] bytes) {
+    final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
+    char[] hexChars = new char[bytes.length * 2];
+    for (int j = 0; j < bytes.length; j++) {
+      int v = bytes[j] & 0xFF;
+      hexChars[j * 2] = HEX_ARRAY[v >>> 4];
+      hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
+    }
+    return new String(hexChars);
+  }
+  static TextView weightLBL;
+  public void ReceiveMessage() {
+
+    weightLBL = findViewById(R.id.weightLBL);
+//    weightLBL.setText("Changed");
+    ReceiveDataTask ReceiveDataTask = new ReceiveDataTask();
+    ReceiveDataTask.execute();
+
+  }
+
   public static class ReceiveDataTask extends AsyncTask<String, String, String> {
+
 
     @Override
     protected void onPreExecute() {
@@ -199,26 +216,36 @@ static TextView testLBL;
     }
 
     @Override
+    protected void onProgressUpdate(String... values) {
+      super.onProgressUpdate(values);
+      DecimalFormat df2 = new DecimalFormat("#.##");
+      weightLBL.setText(df2.format(Double.parseDouble(values[0])));
+    }
+
+    @Override
     protected String doInBackground(String... strings) {
       InputStream socketInputStream = inputStream;
-      byte[] buffer = new byte[256];
-      int bytes;
-
+      byte[] buffer = new byte[4];
 
       // Keep looping to listen for received messages
       while (true) {
         try {
-          bytes = socketInputStream.read(buffer);            //read bytes from input buffer
-          String readMessage = new String(buffer, 0, bytes);
-          testLBL.setText(readMessage);
-          // Send the obtained bytes to the UI Activity via handler
-          Log.i("logging", readMessage + "");
+          socketInputStream.read(buffer);            //read bytes from inputStream to buffer
+          String weight = bytesToHex(buffer);
+
+          long i = Long.parseLong(weight, 16);
+          float f = Float.intBitsToFloat((int) i);
+
+          this.publishProgress(f + "");
+
         } catch (IOException e) {
           Snackbar.make(parentLayout, e.getMessage(), Snackbar.LENGTH_LONG)
               .setAction("IOException", null).show();
 
           break;
         }
+
+
       }
       return null;
     }

@@ -52,13 +52,19 @@ public class H26R0_LOAD_CELL extends Fragment {
         getActivity(), android.R.layout.simple_spinner_item, spinnerArray);
 
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    Code = HexaInterface.Message_Codes.CODE_H26R0_STREAM_PORT_GRAM;
     unitSpinner.setAdapter(adapter);
 
     unitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
       @Override
       public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-
+        switch (position)
+        {
+          case 0: Code = HexaInterface.Message_Codes.CODE_H26R0_STREAM_PORT_GRAM; break;
+          case 1: Code = HexaInterface.Message_Codes.CODE_H26R0_STREAM_PORT_KGRAM; break;
+          case 2: Code = HexaInterface.Message_Codes.CODE_H26R0_STREAM_PORT_POUND; break;
+          case 3: Code = HexaInterface.Message_Codes.CODE_H26R0_STREAM_PORT_OUNCE; break;
+        }
 
       }
 
@@ -71,6 +77,8 @@ public class H26R0_LOAD_CELL extends Fragment {
     final TextView PeriodTV = rootView.findViewById(R.id.PeriodTV);
     final TextView TimeOutTV = rootView.findViewById(R.id.TimeOutTV);
     final Switch LoadCellSwitch = rootView.findViewById(R.id.LoadCellSwitch);
+    final TextView weightLBL = rootView.findViewById(R.id.weightLBL);
+    final Switch infiniteTimeSwitch = rootView.findViewById(R.id.infiniteTimeSwitch);
 
 
 
@@ -79,39 +87,42 @@ public class H26R0_LOAD_CELL extends Fragment {
       @Override
       public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-        if (!isChecked) {
+        if (isChecked) {
           LoadCellSwitch.setText("On");
 
           int period = Integer.parseInt(PeriodTV.getText().toString());
-          int time = Integer.parseInt(TimeOutTV.getText().toString());
+          int time;
+          if(infiniteTimeSwitch.isChecked())
+            time = 0xFFFFFFFF;
+          else
+            time = Integer.parseInt(TimeOutTV.getText().toString());
 
           byte[] periodBytes = ByteBuffer.allocate(4).putInt(period).array();
           byte[] timeBytes = ByteBuffer.allocate(4).putInt(time).array();
 
-          Code = HexaInterface.Message_Codes.CODE_H26R0_STREAM_PORT_GRAM;
+
           Payload = new byte[]{
               1,
-              periodBytes[3],
-              periodBytes[2],
+              periodBytes[0], // we reverse them here because in Java the allocate reversed their order
               periodBytes[1],
-              periodBytes[0],
+              periodBytes[2],
+              periodBytes[3],
 
-              timeBytes[3],
-              timeBytes[2],
-              timeBytes[1],
               timeBytes[0],
+              timeBytes[1],
+              timeBytes[2],
+              timeBytes[3],
 
-              4,
+              6,
               1};
           SendMessage();
-          MainActivity.ReceiveDataTask ReceiveDataTask = new MainActivity.ReceiveDataTask();
-          ReceiveDataTask.execute();
-
+          ReceiveMessage();
         }
         else
         {
           LoadCellSwitch.setText("Off");
-          isOn = false;
+          weightLBL.setText("0.00");
+
           Code = HexaInterface.Message_Codes.CODE_H26R0_STOP;
           Payload = new byte[0];
           SendMessage();
@@ -120,7 +131,21 @@ public class H26R0_LOAD_CELL extends Fragment {
       }
     });
 
+    infiniteTimeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+      @Override
+      public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
+        if(isChecked) {
+          TimeOutTV.setEnabled(false);
+          infiniteTimeSwitch.setText("On");
+
+        }
+        else {
+          TimeOutTV.setEnabled(true);
+          infiniteTimeSwitch.setText("Off");
+        }
+      }
+    });
 
 
     return rootView;
@@ -137,5 +162,9 @@ public class H26R0_LOAD_CELL extends Fragment {
         }
       }, 100);
     }
+  }
+
+  private void ReceiveMessage() {
+    ((MainActivity) Objects.requireNonNull(getActivity())).ReceiveMessage();
   }
 }

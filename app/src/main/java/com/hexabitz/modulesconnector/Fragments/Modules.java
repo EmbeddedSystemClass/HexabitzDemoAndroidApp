@@ -23,7 +23,7 @@ public class Modules extends Fragment {
   Fragment H0FR60_RELAY = new H0FR60_RELAY_AC();
   Fragment H08R6_IR_SENSOR = new H08R6_IR_SENSOR();
   Fragment H26R0_LOAD_CELL = new H26R0_LOAD_CELL();
-//  Fragment HXXXX_NAME_TEMPLATE = new HXXXX_NAME_TEMPLATE();
+  Fragment H0BR40_IMU = new H0BR40_IMU();
 
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -33,10 +33,11 @@ public class Modules extends Fragment {
     ViewPagerAdapter adapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
 
     adapter.addFragment(Settings, "Settings");
-    adapter.addFragment(H01R00_RGB_LED, "H01R00");
-    adapter.addFragment(H0FR60_RELAY, "H0FR60");
-    adapter.addFragment(H26R0_LOAD_CELL, "H26R0");
-    adapter.addFragment(H08R6_IR_SENSOR, "H08R6");
+    adapter.addFragment(H01R00_RGB_LED, "RGB_LED");
+    adapter.addFragment(H0FR60_RELAY, "RELAY");
+    adapter.addFragment(H26R0_LOAD_CELL, "LOAD_CELL");
+    adapter.addFragment(H08R6_IR_SENSOR, "IR_SENSOR");
+    adapter.addFragment(H0BR40_IMU, "IMU");
 
     viewPager.setAdapter(adapter);
 
