@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -56,14 +57,28 @@ public class H08R6_IR_SENSOR extends Fragment {
     unitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
       @Override
       public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        Code = HexaInterface.Message_Codes.CODE_H08R6_SET_UNIT;
+        switch (position) {
+          case 0: Payload = new byte[]{0}; break;
+          case 1: Payload = new byte[]{1}; break;
+          case 2: Payload = new byte[]{2}; break;
+        }
 
-
-
+//        SendMessage();
       }
 
       @Override
       public void onNothingSelected(AdapterView<?> parent) {
 
+      }
+    });
+
+    Button setUnitBTN = rootView.findViewById(R.id.setUnitBTN);
+
+    setUnitBTN.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        SendMessage();
       }
     });
 
@@ -76,9 +91,8 @@ public class H08R6_IR_SENSOR extends Fragment {
       @Override
       public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-        if (!isOn) {
+        if (isChecked) {
           IRSwitch.setText("On");
-          isOn = true;
 
           int period = Integer.parseInt(PeriodTV.getText().toString());
           int time = Integer.parseInt(TimeOutTV.getText().toString());
@@ -87,15 +101,21 @@ public class H08R6_IR_SENSOR extends Fragment {
           byte[] timeBytes = ByteBuffer.allocate(4).putInt(time).array();
 
           Code = HexaInterface.Message_Codes.CODE_H08R6_STREAM_PORT;
-          Payload = new byte[]{periodBytes[3], periodBytes[2], periodBytes[1], periodBytes[0],
-                              timeBytes[3], timeBytes[2], timeBytes[1], timeBytes[0]};
-          SendMessage();
+          Payload = new byte[]{
+              periodBytes[0], // we reverse them here because in Java the allocate reversed their order
+              periodBytes[1],
+              periodBytes[2],
+              periodBytes[3],
 
-//          try {
-//            ((MainActivity) Objects.requireNonNull(getActivity())).receiveData();
-//          } catch (IOException e) {
-//            e.printStackTrace();
-//          }
+              timeBytes[0],
+              timeBytes[1],
+              timeBytes[2],
+              timeBytes[3],
+
+              6,
+              1};
+          SendMessage();
+          ReceiveMessage();
 
         }
         else
@@ -106,11 +126,8 @@ public class H08R6_IR_SENSOR extends Fragment {
           Payload = new byte[0];
           SendMessage();
         }
-
       }
     });
-
-
 
 
     return rootView;
@@ -127,5 +144,9 @@ public class H08R6_IR_SENSOR extends Fragment {
         }
       }, 100);
     }
+  }
+
+  private void ReceiveMessage() {
+    ((MainActivity) Objects.requireNonNull(getActivity())).ReceiveMessage();
   }
 }

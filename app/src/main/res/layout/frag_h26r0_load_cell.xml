@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.hexabitz.modulesconnector.Modules_Fragments.H08R6_IR_SENSOR">
+    tools:context="com.hexabitz.modulesconnector.Modules_Fragments.H26R0_LOAD_CELL">
 
 
     <ScrollView

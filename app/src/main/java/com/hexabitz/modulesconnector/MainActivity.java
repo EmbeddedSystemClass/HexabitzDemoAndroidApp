@@ -43,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
   public String Opt1_Extended_Flag = "0";
   public byte[] AllMessage;
 
+
+  static TextView weightLBL, rangeLBL;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -181,7 +184,6 @@ public class MainActivity extends AppCompatActivity {
     return bytes.array();
   }
 
-
   public static String bytesToHex(byte[] bytes) {
     final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
     char[] hexChars = new char[bytes.length * 2];
@@ -192,34 +194,23 @@ public class MainActivity extends AppCompatActivity {
     }
     return new String(hexChars);
   }
-  static TextView weightLBL;
+
   public void ReceiveMessage() {
 
     weightLBL = findViewById(R.id.weightLBL);
-//    weightLBL.setText("Changed");
+    rangeLBL = findViewById(R.id.rangeLBL);
     ReceiveDataTask ReceiveDataTask = new ReceiveDataTask();
     ReceiveDataTask.execute();
-
   }
 
   public static class ReceiveDataTask extends AsyncTask<String, String, String> {
-
-
-    @Override
-    protected void onPreExecute() {
-
-    }
-
-    @Override
-    protected void onPostExecute(String r) {
-
-    }
 
     @Override
     protected void onProgressUpdate(String... values) {
       super.onProgressUpdate(values);
       DecimalFormat df2 = new DecimalFormat("#.##");
       weightLBL.setText(df2.format(Double.parseDouble(values[0])));
+      rangeLBL.setText(df2.format(Double.parseDouble(values[0])));
     }
 
     @Override
@@ -227,13 +218,12 @@ public class MainActivity extends AppCompatActivity {
       InputStream socketInputStream = inputStream;
       byte[] buffer = new byte[4];
 
-      // Keep looping to listen for received messages
       while (true) {
         try {
-          socketInputStream.read(buffer);            //read bytes from inputStream to buffer
-          String weight = bytesToHex(buffer);
+          socketInputStream.read(buffer);
+          String receivedBytes = bytesToHex(buffer);
 
-          long i = Long.parseLong(weight, 16);
+          long i = Long.parseLong(receivedBytes, 16);
           float f = Float.intBitsToFloat((int) i);
 
           this.publishProgress(f + "");
@@ -241,11 +231,8 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
           Snackbar.make(parentLayout, e.getMessage(), Snackbar.LENGTH_LONG)
               .setAction("IOException", null).show();
-
           break;
         }
-
-
       }
       return null;
     }

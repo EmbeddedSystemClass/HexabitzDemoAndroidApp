@@ -28,7 +28,7 @@ import java.util.TimerTask;
 
 public class H26R0_LOAD_CELL extends Fragment {
 
-  boolean isLocked = false, isOn = false;
+  boolean isLocked = false;
   int Code;
   byte[] Payload;
   Timer t = new Timer();
