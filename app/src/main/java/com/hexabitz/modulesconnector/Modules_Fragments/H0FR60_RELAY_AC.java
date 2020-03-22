@@ -16,7 +16,6 @@ import com.hexabitz.modulesconnector.MainActivity;
 import com.hexabitz.modulesconnector.R;
 
 import java.nio.ByteBuffer;
-import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -76,7 +75,7 @@ public class H0FR60_RELAY_AC extends Fragment {
 
   private void SendMessage() {
     if (!isLocked) {
-      ((MainActivity) Objects.requireNonNull(getActivity())).SendMessage((byte) Settings.Destination, (byte) Settings.Source, Code, Payload);
+      ((MainActivity) getActivity()).SendMessage((byte) Settings.Destination, (byte) Settings.Source, Code, Payload);
       isLocked = true;
       t.schedule(new TimerTask() {
         @Override

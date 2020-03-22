@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.hexabitz.modulesconnector.Fragments.Modules;
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
   static View parentLayout;
   Fragment Modules = new Modules();
-  //  Fragment Settings = new Settings();
+  static ReceiveDataTask ReceiveDataTask;
 
   private BluetoothSocket bluetoothSocket;
   private BluetoothDevice bluetoothDevice;
@@ -44,7 +45,8 @@ public class MainActivity extends AppCompatActivity {
   public byte[] AllMessage;
 
 
-  static TextView weightLBL, rangeLBL;
+  static TextView weightLBL;
+  static EditText rangeET;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -198,8 +200,8 @@ public class MainActivity extends AppCompatActivity {
   public void ReceiveMessage() {
 
     weightLBL = findViewById(R.id.weightLBL);
-    rangeLBL = findViewById(R.id.rangeLBL);
-    ReceiveDataTask ReceiveDataTask = new ReceiveDataTask();
+    rangeET = findViewById(R.id.rangeET);
+    ReceiveDataTask = new ReceiveDataTask();
     ReceiveDataTask.execute();
   }
 
@@ -210,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
       super.onProgressUpdate(values);
       DecimalFormat df2 = new DecimalFormat("#.##");
       weightLBL.setText(df2.format(Double.parseDouble(values[0])));
-      rangeLBL.setText(df2.format(Double.parseDouble(values[0])));
+      rangeET.setText(df2.format(Double.parseDouble(values[0])));
     }
 
     @Override
@@ -219,6 +221,8 @@ public class MainActivity extends AppCompatActivity {
       byte[] buffer = new byte[4];
 
       while (true) {
+        if(isCancelled())
+          break;
         try {
           socketInputStream.read(buffer);
           String receivedBytes = bytesToHex(buffer);
@@ -236,5 +240,11 @@ public class MainActivity extends AppCompatActivity {
       }
       return null;
     }
+  }
+
+  public void StopReceiving()
+  {
+    ReceiveDataTask.cancel(true);
+    ReceiveDataTask = new ReceiveDataTask();
   }
 }

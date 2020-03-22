@@ -11,7 +11,6 @@ import com.hexabitz.modulesconnector.Fragments.Settings;
 import com.hexabitz.modulesconnector.MainActivity;
 import com.hexabitz.modulesconnector.R;
 
-import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -36,7 +35,7 @@ public class HXXXX_NAME_TEMPLATE extends Fragment {
 
   private void SendMessage() {
     if (!isLocked) {
-      ((MainActivity) Objects.requireNonNull(getActivity())).SendMessage((byte) Settings.Destination, (byte) Settings.Source, Code, Payload);
+      ((MainActivity) getActivity()).SendMessage((byte) Settings.Destination, (byte) Settings.Source, Code, Payload);
       isLocked = true;
       t.schedule(new TimerTask() {
         @Override

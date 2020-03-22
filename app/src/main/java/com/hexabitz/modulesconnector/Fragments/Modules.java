@@ -33,11 +33,11 @@ public class Modules extends Fragment {
     ViewPagerAdapter adapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
 
     adapter.addFragment(Settings, "Settings");
-    adapter.addFragment(H01R00_RGB_LED, "RGB_LED");
-    adapter.addFragment(H0FR60_RELAY, "RELAY");
-    adapter.addFragment(H26R0_LOAD_CELL, "LOAD_CELL");
+//    adapter.addFragment(H01R00_RGB_LED, "RGB_LED");
+//    adapter.addFragment(H0FR60_RELAY, "RELAY");
+//    adapter.addFragment(H26R0_LOAD_CELL, "LOAD_CELL");
     adapter.addFragment(H08R6_IR_SENSOR, "IR_SENSOR");
-    adapter.addFragment(H0BR40_IMU, "IMU");
+//    adapter.addFragment(H0BR40_IMU, "IMU");
 
     viewPager.setAdapter(adapter);
 

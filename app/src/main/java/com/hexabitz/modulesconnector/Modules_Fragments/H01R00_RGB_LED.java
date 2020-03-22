@@ -17,7 +17,6 @@ import com.hexabitz.modulesconnector.R;
 import com.larswerkman.holocolorpicker.ColorPicker;
 import com.larswerkman.holocolorpicker.OpacityBar;
 
-import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -93,7 +92,7 @@ public class H01R00_RGB_LED extends Fragment {
 
   private void SendMessage() {
     if (!isLocked) {
-      ((MainActivity) Objects.requireNonNull(getActivity())).SendMessage((byte) Settings.Destination, (byte) Settings.Source, Code, Payload);
+      ((MainActivity) getActivity()).SendMessage((byte) Settings.Destination, (byte) Settings.Source, Code, Payload);
       isLocked = true;
       t.schedule(new TimerTask() {
         @Override

@@ -21,7 +21,6 @@ import com.hexabitz.modulesconnector.R;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -126,6 +125,7 @@ public class H26R0_LOAD_CELL extends Fragment {
           Code = HexaInterface.Message_Codes.CODE_H26R0_STOP;
           Payload = new byte[0];
           SendMessage();
+          StopReceiving();
         }
 
       }
@@ -153,7 +153,7 @@ public class H26R0_LOAD_CELL extends Fragment {
 
   private void SendMessage() {
     if (!isLocked) {
-      ((MainActivity) Objects.requireNonNull(getActivity())).SendMessage((byte) Settings.Destination, (byte) Settings.Source, Code, Payload);
+      ((MainActivity) getActivity()).SendMessage((byte) Settings.Destination, (byte) Settings.Source, Code, Payload);
       isLocked = true;
       t.schedule(new TimerTask() {
         @Override
@@ -165,6 +165,10 @@ public class H26R0_LOAD_CELL extends Fragment {
   }
 
   private void ReceiveMessage() {
-    ((MainActivity) Objects.requireNonNull(getActivity())).ReceiveMessage();
+    ((MainActivity) getActivity()).ReceiveMessage();
+  }
+
+  private void StopReceiving() {
+    ((MainActivity) getActivity()).StopReceiving();
   }
 }
