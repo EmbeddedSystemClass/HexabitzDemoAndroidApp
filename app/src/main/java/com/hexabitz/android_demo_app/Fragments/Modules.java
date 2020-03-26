@@ -1,4 +1,4 @@
-package com.hexabitz.modulesconnector.Fragments;
+package com.hexabitz.android_demo_app.Fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,9 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hexabitz.modulesconnector.Modules_Fragments.*;
-import com.hexabitz.modulesconnector.R;
-import com.hexabitz.modulesconnector.ViewPagerAdapter;
+import com.hexabitz.android_demo_app.Modules_Fragments.*;
+import com.hexabitz.android_demo_app.R;
+import com.hexabitz.android_demo_app.ViewPagerAdapter;
 
 
 public class Modules extends Fragment {

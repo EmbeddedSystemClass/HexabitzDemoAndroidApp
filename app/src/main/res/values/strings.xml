@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Modules Connector</string>
+    <string name="app_name">Android Demo App</string>
     <string name="title_home">Home</string>
     <string name="title_modules">Modules</string>
     <string name="title_settings">Settings</string>

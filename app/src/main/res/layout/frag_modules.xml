@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.hexabitz.modulesconnector.Fragments.Modules">
+    tools:context="com.hexabitz.android_demo_app.Fragments.Modules">
 
 
     <android.support.constraint.ConstraintLayout

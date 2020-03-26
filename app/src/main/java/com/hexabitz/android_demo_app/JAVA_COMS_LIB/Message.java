@@ -1,4 +1,4 @@
-package com.hexabitz.modulesconnector.JAVA_COMS_LIB;
+package com.hexabitz.android_demo_app.JAVA_COMS_LIB;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -73,7 +73,7 @@ public class Message {
       i++;
     }
 
-    byte CRC = (byte) com.hexabitz.modulesconnector.JAVA_COMS_LIB.CRC32.calc2(OrganizedBuffer,0,OrganizedBuffer.length);
+    byte CRC = (byte) com.hexabitz.android_demo_app.JAVA_COMS_LIB.CRC32.calc2(OrganizedBuffer,0,OrganizedBuffer.length);
     return CRC;
   }
 

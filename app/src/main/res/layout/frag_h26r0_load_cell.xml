@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.hexabitz.modulesconnector.Modules_Fragments.H26R0_LOAD_CELL">
+    tools:context="com.hexabitz.android_demo_app.Modules_Fragments.H26R0_LOAD_CELL">
 
 
     <ScrollView

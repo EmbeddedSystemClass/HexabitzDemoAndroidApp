@@ -1,4 +1,4 @@
-package com.hexabitz.modulesconnector.JAVA_COMS_LIB;
+package com.hexabitz.android_demo_app.JAVA_COMS_LIB;
 /*
 		https://github.com/arturvt/TSreader/blob/master/src/br/ufpe/cin/tool/mpegts/CRC32.java
     SBTVD TS Parser - MPEG-2 Transport Stream analyser and debugging tool.

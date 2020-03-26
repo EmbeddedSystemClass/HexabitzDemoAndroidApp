@@ -1,4 +1,4 @@
-package com.hexabitz.modulesconnector;
+package com.hexabitz.android_demo_app;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -15,8 +15,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.hexabitz.modulesconnector.Fragments.Modules;
-import com.hexabitz.modulesconnector.JAVA_COMS_LIB.Message;
+import com.hexabitz.android_demo_app.Fragments.Modules;
+import com.hexabitz.android_demo_app.JAVA_COMS_LIB.Message;
 
 import java.io.IOException;
 import java.io.InputStream;

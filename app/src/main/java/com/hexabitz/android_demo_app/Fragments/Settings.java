@@ -1,4 +1,4 @@
-package com.hexabitz.modulesconnector.Fragments;
+package com.hexabitz.android_demo_app.Fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.NumberPicker;
 
-import com.hexabitz.modulesconnector.R;
+import com.hexabitz.android_demo_app.R;
 
 
 public class Settings extends Fragment {

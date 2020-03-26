@@ -1,15 +1,6 @@
-package com.hexabitz.modulesconnector.JAVA_COMS_LIB;
+package com.hexabitz.android_demo_app.JAVA_COMS_LIB;
 
-import android.support.design.widget.Snackbar;
-import android.widget.TextView;
-
-import com.hexabitz.modulesconnector.Fragments.Settings;
-import com.hexabitz.modulesconnector.MainActivity;
-import com.hexabitz.modulesconnector.R;
-
-import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Objects;
 
 public class HexaInterface {
 

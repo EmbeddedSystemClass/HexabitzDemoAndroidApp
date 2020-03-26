@@ -1,4 +1,4 @@
-package com.hexabitz.modulesconnector.Modules_Fragments;
+package com.hexabitz.android_demo_app.Modules_Fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,9 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hexabitz.modulesconnector.Fragments.Settings;
-import com.hexabitz.modulesconnector.MainActivity;
-import com.hexabitz.modulesconnector.R;
+import com.hexabitz.android_demo_app.Fragments.Settings;
+import com.hexabitz.android_demo_app.MainActivity;
+import com.hexabitz.android_demo_app.R;
 
 import java.util.Timer;
 import java.util.TimerTask;

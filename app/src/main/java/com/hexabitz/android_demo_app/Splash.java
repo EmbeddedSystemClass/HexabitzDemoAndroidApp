@@ -1,4 +1,4 @@
-package com.hexabitz.modulesconnector;
+package com.hexabitz.android_demo_app;
 
 import android.app.Activity;
 import android.content.Intent;
